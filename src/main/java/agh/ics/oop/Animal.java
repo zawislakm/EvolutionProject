@@ -6,13 +6,14 @@ import agh.ics.oop.Enums.MapDirection;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Animal extends WorldMapElement {//hashowanie i objectownaie trzeba napisac dla zwierzat
+public class Animal extends WorldMapElement {
 
-    private WorldMap worldMap;
+    private final WorldMap worldMap;
     protected MapDirection orientation = MapDirection.NORTH;
     protected int energy;
     protected List<Integer> genom;
     protected int whichGenNow;
+
     //stats
     protected int age = 0;
     protected int child = 0;

@@ -3,9 +3,13 @@ package agh.ics.oop;
 
 import java.util.List;
 
+
+/*
+ keeps track of all data/stats for given animal
+ */
 public class AnimalStatistics {
 
-    private Animal animal;
+    private final Animal animal;
 
     private List<Integer> genom;
     private int whichGenActive;

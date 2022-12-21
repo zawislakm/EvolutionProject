@@ -1,37 +1,30 @@
 package agh.ics.oop;
 
-import agh.ics.oop.MapType.EarthMap;
-import agh.ics.oop.MapType.HellMap;
-import agh.ics.oop.MapType.IMapType;
-import agh.ics.oop.MutationType.FullRandom;
-import agh.ics.oop.MutationType.IMutationType;
-import agh.ics.oop.MutationType.SlightFix;
-import agh.ics.oop.NextGenType.ExpectedNextGen;
-import agh.ics.oop.NextGenType.INextGenType;
-import agh.ics.oop.NextGenType.LittleCrazinessGen;
-import agh.ics.oop.PlantGrowType.ForestEquator;
-import agh.ics.oop.PlantGrowType.IPlantGrowType;
-import agh.ics.oop.PlantGrowType.ToxicBodies;
-
+import agh.ics.oop.MapType.*;
+import agh.ics.oop.MutationType.*;
+import agh.ics.oop.NextGenType.*;
+import agh.ics.oop.PlantGrowType.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
+/*
+ parse CSV config to simulation options
+ */
 public class OptionParser {
 
-    private List<Integer> intParameters = new ArrayList<>();
+    private final  List<Integer> intParameters = new ArrayList<>();
     protected File fileToRead;
 
     public OptionParser(File fileToRead) {
         this.fileToRead = fileToRead;
-        paraseCSV();
+        parseCSV();
     }
 
-    private void paraseCSV() {
+    private void parseCSV() {
 
-        Scanner fileScanner = null;
+        Scanner fileScanner;
         try {
             fileScanner = new Scanner(this.fileToRead);
             String line = fileScanner.nextLine();
@@ -61,6 +54,7 @@ public class OptionParser {
             int quantityAnimalSpawnStart = intParameters.get(11);
             int quantityPlantSpawnStart = intParameters.get(12);
             int animalStartEnergy = intParameters.get(13);
+
             WorldMap worldMap = new WorldMap(mapType, nextGenType, mutationType, plantGrowType, width, height, breedCost,
                     genomLenght, minimalEnergyToBreed, quantityGrowEveryDay, energyFromPlant, quantityAnimalSpawnStart, quantityPlantSpawnStart, animalStartEnergy);
             return worldMap;

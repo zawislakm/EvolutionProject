@@ -6,13 +6,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
+/*
+    save statistic to CSV if required, notified about next day by IPositionChangeObserver
+ */
 public class StatisticsCSVSave implements IPositionChangeObserver { //lapanie konca
 
-    private WorldMapStatistics worldMapStatistics;
-    private Simulation engineSimulation;
+    private final WorldMapStatistics worldMapStatistics;
+    private final Simulation engineSimulation;
 
-    private FileWriter csvWrite = null;
+    private FileWriter csvWrite;
 
     public StatisticsCSVSave(WorldMapStatistics worldMapStatistics, Simulation engine) {
         this.worldMapStatistics = worldMapStatistics;

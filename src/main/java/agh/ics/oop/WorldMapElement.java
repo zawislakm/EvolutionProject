@@ -1,4 +1,8 @@
 package agh.ics.oop;
+
+/*
+   abstract class for animal and plant
+ */
 public abstract class WorldMapElement {
 
     protected Vector2d position;

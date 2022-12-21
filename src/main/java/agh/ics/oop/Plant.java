@@ -1,5 +1,6 @@
 package agh.ics.oop;
 
+
 public class Plant extends WorldMapElement {
 
     public Plant(Vector2d position){

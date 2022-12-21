@@ -2,9 +2,12 @@ package agh.ics.oop;
 
 import java.util.*;
 
+/*
+ keeps track of all data/stats connected with WorldMap
+ */
 public class WorldMapStatistics {
 
-    private WorldMap worldMap;
+    private final WorldMap worldMap;
 
     private int amountOfAnimals;
     private int amountOfPlants;
@@ -14,44 +17,34 @@ public class WorldMapStatistics {
     private double averageLifeLength;
     private int maxEnergy;
 
-
-    public WorldMapStatistics(WorldMap worldMap){
+    public WorldMapStatistics(WorldMap worldMap) {
         this.worldMap = worldMap;
     }
-
-
-    public int getAmountOfAnimals(){
+    public int getAmountOfAnimals() {
         return this.amountOfAnimals;
     }
-
-    public int getAmountOfPlants(){
+    public int getAmountOfPlants() {
         return this.amountOfPlants;
     }
-
-    public int getAmountOfFreePositions(){
+    public int getAmountOfFreePositions() {
         return this.amountOfFreePositions;
     }
-
-    public List<Integer> getMostCommonGenom(){
+    public List<Integer> getMostCommonGenom() {
         return this.mostCommonGenom;
     }
-
-    public double getAverageEnergy(){
+    public double getAverageEnergy() {
         return this.averageEnergy;
     }
-
-    public double getAverageLifeLength(){
+    public double getAverageLifeLength() {
         return this.averageLifeLength;
     }
-
-    public int getWorldAge(){
+    public int getWorldAge() {
         return worldMap.worldAge;
     }
-    public int getMaxEnergy(){
+    public int getMaxEnergy() {
         return this.maxEnergy;
     }
-
-    public void update(){
+    public void update() {
         updateAnimalsAmount();
         updatePlantsAmount();
         updateFreePositionsAmount();
@@ -60,38 +53,33 @@ public class WorldMapStatistics {
         updateAverageLifeLength();
         updateMostCommonGenom();
     }
-    private void updateAnimalsAmount(){
+    private void updateAnimalsAmount() {
         this.amountOfAnimals = worldMap.animalsList.size();
     }
-    private void updatePlantsAmount(){
+    private void updatePlantsAmount() {
         this.amountOfPlants = worldMap.plantsList.size();
     }
-
-
-    private void updateFreePositionsAmount(){
+    private void updateFreePositionsAmount() {
         this.amountOfFreePositions = worldMap.freePositions.size();
     }
-
-    private void updateMaxEnergy(){
+    private void updateMaxEnergy() {
         this.maxEnergy = 0;
-        for (Animal animal: worldMap.animalsList){
-            this.maxEnergy = Math.max(this.maxEnergy,animal.energy);
+        for (Animal animal : worldMap.animalsList) {
+            this.maxEnergy = Math.max(this.maxEnergy, animal.energy);
         }
     }
-
-    private void updateAverageEnergy(){
+    private void updateAverageEnergy() {
         double newAverageEnergy = 0;
-        for(Animal animal: worldMap.animalsList){
+        for (Animal animal : worldMap.animalsList) {
             newAverageEnergy += animal.energy;
         }
-        newAverageEnergy = newAverageEnergy/worldMap.animalsList.size();
+        newAverageEnergy = newAverageEnergy / worldMap.animalsList.size();
         this.averageEnergy = Math.round(newAverageEnergy);
     }
-
-    private void updateAverageLifeLength(){
-        if (worldMap.deadAnimalList.size() == 0){
+    private void updateAverageLifeLength() {
+        if (worldMap.deadAnimalList.size() == 0) {
             this.averageLifeLength = 0;
-        }else {
+        } else {
             double newAverageLifeLength = 0;
             for (Animal animal : worldMap.deadAnimalList) {
                 newAverageLifeLength += animal.age;
@@ -100,12 +88,11 @@ public class WorldMapStatistics {
             this.averageLifeLength = Math.round(newAverageLifeLength);
         }
     }
+    private void updateMostCommonGenom() { //not done
 
-    private void updateMostCommonGenom(){ //not done
-
-        if (worldMap.animalsList.size() ==0){
+        if (worldMap.animalsList.size() == 0) {
             this.mostCommonGenom = null;
-        }else {
+        } else {
             Map<List<Integer>, Integer> genomCount = new HashMap<>();
 
             for (Animal animal : worldMap.animalsList) {
@@ -124,6 +111,4 @@ public class WorldMapStatistics {
             this.mostCommonGenom = list.get(0).getKey();
         }
     }
-
-
 }

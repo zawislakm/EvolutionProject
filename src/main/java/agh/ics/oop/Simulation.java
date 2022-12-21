@@ -5,11 +5,11 @@ import java.util.List;
 
 public class Simulation implements Runnable {
 
-    private WorldMap worldMap;
+    private final WorldMap worldMap;
     private final List<IPositionChangeObserver> SimulationObservers = new ArrayList<>();
     private boolean isPaused = false;
     private boolean isFinished = false;
-    private List<Animal> animalsWithMostCommonGenom = new ArrayList<>();
+    private final List<Animal> animalsWithMostCommonGenom = new ArrayList<>();
 
     public Simulation(WorldMap worldMap) {
         this.worldMap = worldMap;
@@ -17,35 +17,22 @@ public class Simulation implements Runnable {
 
     public void run() {
 
-        System.out.println(worldMap);
         while (!(this.isFinished)) {
             checkIfPause();
-            //usuniecie martwych
+
             this.worldMap.killAnimals();
-            //ruszenie zwierzakami
-            this.worldMap.moveAnimals(); //dziala chyba
-            //konsumpcja roslin
-            this.worldMap.eatPlants(); //wyglada ze dziala
-            //rozmazanie sie zwierzakow
+            this.worldMap.moveAnimals();
+            this.worldMap.eatPlants();
             this.worldMap.breedAnimals();
-            //wzrastanie nowych roslin
             this.worldMap.growPlants();
 
             worldMap.worldAge += 1;
-            if (worldMap.animalsList.size()==0){
+            if (worldMap.animalsList.size() == 0) {
                 this.isFinished = true;
             }
             moveGui();
-            //System.out.println(worldMap);
+
         }
-
-        moveGui();
-
-        System.out.println("start");
-        System.out.println(worldMap);
-
-        System.out.println("koniec");
-
     }
 
     private void checkIfPause() {
@@ -77,7 +64,7 @@ public class Simulation implements Runnable {
         return this.isPaused;
     }
 
-    public boolean getFinishedStatus(){
+    public boolean getFinishedStatus() {
         return this.isFinished;
     }
 
@@ -89,7 +76,7 @@ public class Simulation implements Runnable {
             int moveDelay = 1000;
             Thread.sleep(moveDelay);
         } catch (InterruptedException ex) {
-            System.out.println(ex.getMessage() + "Simulation Interupted during sleep");
+            System.out.println(ex.getMessage() + " Simulation Interrupted during sleep");
         }
     }
 
@@ -103,16 +90,17 @@ public class Simulation implements Runnable {
         this.SimulationObservers.add(observer);
     }
 
-    public void removeObserver(IPositionChangeObserver observer){
+    public void removeObserver(IPositionChangeObserver observer) {
         this.SimulationObservers.remove(observer);
     }
 
 
-    private void findAnimalGenoms(){
-        //sets animal with most commonGenom to show
+    //sets animal with most commonGenom to show
+    private void findAnimalGenoms() {
+
         List<Integer> mostCommonGenom = worldMap.worldMapStatistics.getMostCommonGenom();
-        for (Animal animal : worldMap.animalsList){
-            if(animal.genom.equals(mostCommonGenom)){
+        for (Animal animal : worldMap.animalsList) {
+            if (animal.genom.equals(mostCommonGenom)) {
                 animal.withMostCommon = true;
                 animalsWithMostCommonGenom.add(animal);
             }
@@ -120,9 +108,10 @@ public class Simulation implements Runnable {
         notifyObservers();
     }
 
-    private void clearAnimalGenoms(){
-        //sets animal with most commonGenom to look normal
-        for(Animal animal : this.animalsWithMostCommonGenom){
+    //sets animal with most commonGenom to look normal
+    private void clearAnimalGenoms() {
+
+        for (Animal animal : this.animalsWithMostCommonGenom) {
             animal.withMostCommon = false;
         }
         animalsWithMostCommonGenom.clear();

@@ -8,22 +8,25 @@ import agh.ics.oop.PlantGrowType.ToxicBodies;
 
 import java.util.*;
 
+/*
+
+ */
 public class WorldMap {
 
     private final IMapType mapType;
     private final INextGenType nextGenType;
     private final IMutationType mutationType;
     private final IPlantGrowType plantGrowType;
-    protected int width;
-    protected int height;
-    protected int breedCost;
-    private int animalStartEnergy;
-    public int genomLength; //prodlem przy typach
-    protected int minimalEnergyToBreed;
-    protected int energyFromPlant;
-    private int quantityGrowEveryDay;
-    private int quantityAnimalSpawnStart;
-    private int quantityPlantSpawnStart;
+    protected final int width;
+    protected final int height;
+    protected  final int breedCost;
+    private final int  animalStartEnergy;
+    public final int genomLength; //prodlem przy typach
+    protected final int minimalEnergyToBreed;
+    protected  final int energyFromPlant;
+    private final int quantityGrowEveryDay;
+    private final int quantityAnimalSpawnStart;
+    private final int quantityPlantSpawnStart;
     protected final Vector2d lowerLeft = new Vector2d(0, 0);
     protected Vector2d upperRight; //przy rysowaniu mapy problem w gui liczy rozmiar mapu
     protected Map<Vector2d, List<Animal>> animals = new HashMap<>();
@@ -32,8 +35,8 @@ public class WorldMap {
     public TreeMap<Vector2d, Integer> sortedDeadAnimalCountDesc = new TreeMap<>(Collections.reverseOrder()); //hell map uses
     protected Map<Vector2d, Integer> deadAnimalCount = new LinkedHashMap<>(); // count dead animal on this position
     protected List<Vector2d> preferredPositions;
-    protected List<Plant> plantsList = new ArrayList<>();
-    private Map<Vector2d, Plant> plants = new HashMap<>();
+    protected final List<Plant> plantsList = new ArrayList<>();
+    private final Map<Vector2d, Plant> plants = new HashMap<>();
     private final MapVisualizer mapVisualizer = new MapVisualizer(this);
 
     protected List<Vector2d> freePositions = new ArrayList<>(); //stores all free positions
@@ -60,8 +63,6 @@ public class WorldMap {
         this.quantityAnimalSpawnStart = quantityAnimalSpawnStart;
         this.quantityPlantSpawnStart = quantityPlantSpawnStart;
         this.animalStartEnergy = animalStartEnergy;
-        this.upperRight = new Vector2d(this.width - 1, this.height - 1); // moze minus moze plus 1, zastanowic sie jak mapa to czyta
-        this.preferredPositions = this.pickPreferredPositions();
         WorldInit();
         findFreePositions();
 
@@ -71,7 +72,11 @@ public class WorldMap {
         return mapVisualizer.draw(this.lowerLeft, this.upperRight);
     }
 
+
+    //initialization of world map
     private void WorldInit() {
+        this.upperRight = new Vector2d(this.width - 1, this.height - 1);
+        this.preferredPositions = this.pickPreferredPositions();
 
         int iterator = 0;
         while (iterator < quantityAnimalSpawnStart) {
@@ -89,6 +94,21 @@ public class WorldMap {
         }
     }
 
+    private List<Integer> generateGenom() {
+        List<Integer> newGenom = new ArrayList<>();
+        for (int i = 0; i < genomLength; i++) {
+            newGenom.add((int) (Math.random() * 7 + 1) - 1);
+        }
+        return newGenom;
+    }
+
+    private Vector2d generatePosition() {
+        int x = (int) (Math.random() * width);
+        int y = (int) (Math.random() * height);
+        return new Vector2d(x, y);
+    }
+
+    //free positions finder methods
     private void findFreePositions() {
         for (int x = 0; x <= this.upperRight.x; x++) {
             for (int y = 0; y <= this.upperRight.y; y++) {
@@ -110,29 +130,13 @@ public class WorldMap {
         }
     }
 
-    private List<Integer> generateGenom() {
-        List<Integer> newGenom = new ArrayList<>();
-        for (int i = 0; i < genomLength; i++) {
-            newGenom.add((int) (Math.random() * 7 + 1) - 1);
-        }
-        return newGenom;
-    }
-
-    private Vector2d generatePosition() {
-        int x = (int) (Math.random() * width);
-        int y = (int) (Math.random() * height);
-        return new Vector2d(x, y);
-    }
-
-
+    //methods connected with Simulation types
     protected Vector2d mapSpecification(Animal animal, Vector2d newPosition) {// to bedzie zwracac vector gdzie jest zwierze po ruchu
         if (newPosition.precedes(upperRight) && newPosition.follows(lowerLeft)) {
             animal.lowerEnergy(1);
             return newPosition;
         }
-
-
-        return this.mapType.mapSpecyfication(animal, getLowerLeft(),getUpperRight(),newPosition,this.breedCost);
+        return this.mapType.mapSpecyfication(animal, getLowerLeft(), getUpperRight(), newPosition, this.breedCost);
     }
 
     protected int nextGen(int whichGenNow) {
@@ -148,7 +152,7 @@ public class WorldMap {
         return this.plantGrowType.pickPreferredPositions(this);
     }
 
-
+    //methods for operations and checks on map
     private boolean placeAnimal(Animal animal) {
         if (isInBorder(animal.getPosition())) {
             animalsList.add(animal);
@@ -167,16 +171,13 @@ public class WorldMap {
             List<Animal> listFromHashMap = animals.get(position);
             Collections.sort(listFromHashMap, new AnimalComparator());
 
-            if (listFromHashMap.get(0).energy >= 0){ // prevent minus health in hell map
+            if (listFromHashMap.get(0).energy >= 0) { // prevent minus health in hell map
                 return listFromHashMap.get(0);
             }
-
         }
-
         if (plants.get(position) != null) {
             return plants.get(position);
         }
-
         return null;
     }
 
@@ -184,52 +185,47 @@ public class WorldMap {
         return position.precedes(this.upperRight) && position.follows(this.lowerLeft);
     }
 
-    //use in simulation
+    //simulation methods
     protected void killAnimals() {
-
         List<Animal> toErase = new ArrayList<>();
-
-        for (int i = 0; i < this.animalsList.size(); i++) {
-            Animal nowAnimal = this.animalsList.get(i);
+        for (Animal nowAnimal : this.animalsList) { //finding dead animals
             if (nowAnimal.energy < 1) {
                 deadAnimalList.add(nowAnimal);
                 nowAnimal.kill(this.worldAge);
-                //nowAnimal.deathDay = worldAge;
                 toErase.add(nowAnimal);
             }
         }
 
-        for (Animal deadAnimal : toErase) {
+        for (Animal deadAnimal : toErase) { // deleting dead animals from alive animal list
             animalsList.remove(deadAnimal);
             removeAnimalHasMap(deadAnimal, deadAnimal.getPosition());
             addToFreePositions(deadAnimal.getPosition());
             // adding to hashmap
             int count = ((deadAnimalCount.get(deadAnimal.getPosition()) == null) ? 1 : 1 + deadAnimalCount.get(deadAnimal.getPosition()));
             deadAnimalCount.put(deadAnimal.getPosition(), count);
-
         }
 
-        //sorts hashmap by increasing valuse
-        List<Map.Entry<Vector2d, Integer>> list = new ArrayList<>(deadAnimalCount.entrySet());
-        Collections.sort(list, new Comparator<Map.Entry<Vector2d, Integer>>() {
-            public int compare(Map.Entry<Vector2d, Integer> o1, Map.Entry<Vector2d, Integer> o2) {
-                return o2.getValue() - o1.getValue();
+        //deadAnimalCount is used to count preferred positions on
+        if (this.plantGrowType instanceof ToxicBodies) {
+            //sorts hashmap by increasing values,
+            List<Map.Entry<Vector2d, Integer>> list = new ArrayList<>(deadAnimalCount.entrySet());
+            Collections.sort(list, new Comparator<Map.Entry<Vector2d, Integer>>() {
+                public int compare(Map.Entry<Vector2d, Integer> o1, Map.Entry<Vector2d, Integer> o2) {
+                    return o2.getValue() - o1.getValue();
+                }
+            });
+            Map<Vector2d, Integer> temporaryDeadAnimals = new LinkedHashMap<>();
+            for (Map.Entry<Vector2d, Integer> e : list) {
+                temporaryDeadAnimals.put(e.getKey(), e.getValue());
             }
-        });
-        Map<Vector2d, Integer> temporaryDeadAnimals = new LinkedHashMap<>();
-        for (Map.Entry<Vector2d, Integer> e : list) {
-            temporaryDeadAnimals.put(e.getKey(), e.getValue());
+            this.deadAnimalCount = temporaryDeadAnimals;
         }
-        this.deadAnimalCount = temporaryDeadAnimals;
-
-
     }
 
     protected void moveAnimals() {
 
-        for (int i = 0; i < this.animalsList.size(); i++) {
+        for (Animal nowAnimal : this.animalsList) {
 
-            Animal nowAnimal = this.animalsList.get(i);
             Vector2d oldPosition = nowAnimal.getPosition();
             nowAnimal.move();
             Vector2d newPosition = nowAnimal.getPosition();
@@ -242,34 +238,9 @@ public class WorldMap {
         }
     }
 
-    private void addAnimalHashMap(Animal animal, Vector2d newPosition) {
-
-        if (animals.get(newPosition) == null) {
-            List<Animal> listForHashMap = new ArrayList<>();
-            listForHashMap.add(animal);
-            animals.put(newPosition, listForHashMap);
-        } else {
-            List<Animal> listFromHashMap = animals.get(newPosition);
-            listFromHashMap.add(animal);
-            animals.put(newPosition, listFromHashMap);
-        }
-    }
-
-    private void removeAnimalHasMap(Animal animal, Vector2d oldPosition) {
-        List<Animal> listFromHashMap = animals.get(oldPosition);
-        listFromHashMap.remove(animal);
-        if (listFromHashMap.size() == 0) {
-            animals.remove(oldPosition);
-        } else {
-            animals.put(oldPosition, listFromHashMap);
-        }
-
-    }
-
 
     protected void eatPlants() {
         List<Plant> toEarse = new ArrayList<>();
-
 
         for (Plant plant : plantsList) {
             if (animals.get(plant.getPosition()) != null) {
@@ -279,18 +250,13 @@ public class WorldMap {
                 toEarse.add(plant);
             }
 
-
         }
         for (Plant eatenPlant : toEarse) {
             this.removePlant(eatenPlant);
         }
     }
 
-    private void removePlant(Plant eatenPlant) {
-        this.plants.remove(eatenPlant.getPosition());
-        this.plantsList.remove(eatenPlant);
-        addToFreePositions(eatenPlant.getPosition());
-    }
+
 
     protected void growPlants() {
         if (plantGrowType instanceof ToxicBodies) {
@@ -327,9 +293,7 @@ public class WorldMap {
                 alreadyGrown += 1;
             }
             tempNotPreferred.remove(nowVector);
-
         }
-
     }
 
 
@@ -342,7 +306,6 @@ public class WorldMap {
             return true;
         }
         return false;
-
     }
 
     protected void breedAnimals() {
@@ -353,27 +316,52 @@ public class WorldMap {
                 Collections.sort(listFromHashMap, new AnimalComparator());
 
                 if (listFromHashMap.size() > 1) {
-
                     Animal strongerAnimal = listFromHashMap.get(0);
                     Animal weakerAnimal = listFromHashMap.get(1);
                     if (weakerAnimal.energy > this.minimalEnergyToBreed) {
                         Animal newBorn = strongerAnimal.breedAnimal(weakerAnimal, breedCost);
                         this.placeAnimal(newBorn);
                     }
-
                 }
-
-
             }
         }
     }
 
-
-    public Vector2d getUpperRight(){
-        return new Vector2d(upperRight.x,upperRight.y);
+    //help methods
+    public Vector2d getUpperRight() {
+        return new Vector2d(upperRight.x, upperRight.y);
     }
 
-    public Vector2d getLowerLeft(){
-        return new Vector2d(lowerLeft.x,lowerLeft.y);
+    public Vector2d getLowerLeft() {
+        return new Vector2d(lowerLeft.x, lowerLeft.y);
+    }
+
+    private void removePlant(Plant eatenPlant) {
+        this.plants.remove(eatenPlant.getPosition());
+        this.plantsList.remove(eatenPlant);
+        addToFreePositions(eatenPlant.getPosition());
+    }
+    private void addAnimalHashMap(Animal animal, Vector2d newPosition) {
+
+        if (animals.get(newPosition) == null) {
+            List<Animal> listForHashMap = new ArrayList<>();
+            listForHashMap.add(animal);
+            animals.put(newPosition, listForHashMap);
+        } else {
+            List<Animal> listFromHashMap = animals.get(newPosition);
+            listFromHashMap.add(animal);
+            animals.put(newPosition, listFromHashMap);
+        }
+    }
+
+    private void removeAnimalHasMap(Animal animal, Vector2d oldPosition) {
+        List<Animal> listFromHashMap = animals.get(oldPosition);
+        listFromHashMap.remove(animal);
+        if (listFromHashMap.size() == 0) {
+            animals.remove(oldPosition);
+        } else {
+            animals.put(oldPosition, listFromHashMap);
+        }
+
     }
 }
