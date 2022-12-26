@@ -8,7 +8,6 @@ import java.util.*;
 public class WorldMapStatistics {
 
     private final WorldMap worldMap;
-
     private int amountOfAnimals;
     private int amountOfPlants;
     private int amountOfFreePositions;

@@ -17,25 +17,18 @@ public class GuiElementBox {
 
     private final WorldMapElement worldMapElement;
 
-    public GuiElementBox(WorldMapElement worldMapElement) {
+    public GuiElementBox(WorldMapElement worldMapElement){
         this.worldMapElement = worldMapElement;
     }
+
 
     public VBox getVBox() {//Object
         if (this.worldMapElement == null) { //object null
             return new VBox();
         }
-        Image image = null;
+
         String imageName = worldMapElement.getImageName();
-        if (alreadyLoadedElements.get(imageName) == null) {
-            try {
-                alreadyLoadedElements.put(imageName, new Image(new FileInputStream(imageName)));
-            } catch (FileNotFoundException ex) {
-                System.out.println(ex.getMessage() + " something went wrong during loading image");
-                System.exit(-1);
-            }
-        }
-        image = alreadyLoadedElements.get(imageName);
+        Image image = getImage(imageName);
         // check if image is already loaded, if not -> load it and add to hashmap with already loaded images
 
         ImageView imageView = new ImageView(image);
@@ -45,5 +38,19 @@ public class GuiElementBox {
         vBox.setAlignment(Pos.CENTER);
 
         return vBox;
+    }
+
+    public Image getImage(String imageName){
+        Image image = null;
+        if (alreadyLoadedElements.get(imageName) == null) {
+            try {
+                alreadyLoadedElements.put(imageName, new Image(new FileInputStream(imageName)));
+            } catch (FileNotFoundException ex) {
+                System.out.println(ex.getMessage() + " Something went wrong during loading image");
+                System.exit(-1);
+            }
+        }
+        image = alreadyLoadedElements.get(imageName);
+        return image;
     }
 }

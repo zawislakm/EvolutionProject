@@ -27,12 +27,14 @@ public class Simulation implements Runnable {
             this.worldMap.growPlants();
 
             worldMap.worldAge += 1;
+
             if (worldMap.animalsList.size() == 0) {
                 this.isFinished = true;
             }
-            moveGui();
+            moveGui(1000);
 
         }
+
     }
 
     private void checkIfPause() {
@@ -60,6 +62,11 @@ public class Simulation implements Runnable {
         this.isPaused = true;
     }
 
+    public void setFinishedStatus() {
+        moveGui(1);
+        this.isFinished = true;
+    }
+
     public boolean getThreadStatus() {
         return this.isPaused;
     }
@@ -69,11 +76,11 @@ public class Simulation implements Runnable {
     }
 
 
-    private void moveGui() {
+    private void moveGui(int moveDelay) {
         notifyObservers();
 
         try {
-            int moveDelay = 1000;
+            //int moveDelay = 1000;
             Thread.sleep(moveDelay);
         } catch (InterruptedException ex) {
             System.out.println(ex.getMessage() + " Simulation Interrupted during sleep");

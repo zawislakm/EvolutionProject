@@ -16,9 +16,10 @@ public class OptionParser {
 
     private final  List<Integer> intParameters = new ArrayList<>();
     protected File fileToRead;
+    private String filePath;
 
-    public OptionParser(File fileToRead) {
-        this.fileToRead = fileToRead;
+    public OptionParser(String fileToRead) {
+        this.filePath = "src/main/resources/SimulationConfigs/" + fileToRead;
         parseCSV();
     }
 
@@ -26,6 +27,7 @@ public class OptionParser {
 
         Scanner fileScanner;
         try {
+            this.fileToRead = new File(filePath);
             fileScanner = new Scanner(this.fileToRead);
             String line = fileScanner.nextLine();
             String[] strParameters = line.split(";");

@@ -12,7 +12,7 @@ public class App extends Application {
 
 
     public void start(Stage primayStage) {
-        Scene scene = new Scene(new appMenu(this).gridPane, 400, 400);
+        Scene scene = new Scene(new appMenu().menuVBox, 300, 250);
         primayStage.setScene(scene);
         primayStage.setTitle("Main Menu");
 
