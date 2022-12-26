@@ -78,14 +78,19 @@ public class Animal extends WorldMapElement {
 
     public void lowerEnergy(int moveCost){
         this.energy -= moveCost;
+        if (this.energy < 0){
+            this.isAlive = false;
+        }
     }
 
     public void animalRotate180(){
         this.orientation = this.orientation.orientationRotationFromInt(4);
     }
     protected void feedAnimal(int powerUp) {
-        this.eatenPlants += 1;
-        this.energy += powerUp;
+        if (this.energy >= 0) {
+            this.eatenPlants += 1;
+            this.energy += powerUp;
+        }
     }
 
     protected Animal breedAnimal(Animal weaker, int EnergyToBreed) {

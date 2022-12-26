@@ -19,20 +19,21 @@ public class WorldMap {
     private final IPlantGrowType plantGrowType;
     protected final int width;
     protected final int height;
-    protected  final int breedCost;
-    private final int  animalStartEnergy;
-    public final int genomLength; //prodlem przy typach
+    protected final int breedCost;
+    private final int animalStartEnergy;
+    public final int genomLength;
     protected final int minimalEnergyToBreed;
-    protected  final int energyFromPlant;
+    protected final int energyFromPlant;
     private final int quantityGrowEveryDay;
     private final int quantityAnimalSpawnStart;
     private final int quantityPlantSpawnStart;
     protected final Vector2d lowerLeft = new Vector2d(0, 0);
-    protected Vector2d upperRight; //przy rysowaniu mapy problem w gui liczy rozmiar mapu
+    protected Vector2d upperRight;
     protected Map<Vector2d, List<Animal>> animals = new HashMap<>();
     protected List<Animal> animalsList = new ArrayList<>();
     protected List<Animal> deadAnimalList = new ArrayList<>();
-    public TreeMap<Vector2d, Integer> sortedDeadAnimalCountDesc = new TreeMap<>(Collections.reverseOrder()); //hell map uses
+    public TreeMap<Vector2d, Integer> sortedDeadAnimalCountDesc = new TreeMap<>(Collections.reverseOrder());
+    //hell map uses, stores how many animals died on this position in increasing order, picks 20% as preferred
     protected Map<Vector2d, Integer> deadAnimalCount = new LinkedHashMap<>(); // count dead animal on this position
     protected List<Vector2d> preferredPositions;
     protected final List<Plant> plantsList = new ArrayList<>();
@@ -42,7 +43,7 @@ public class WorldMap {
     protected List<Vector2d> freePositions = new ArrayList<>(); //stores all free positions
 
     public WorldMapStatistics worldMapStatistics = new WorldMapStatistics(this);
-
+    private AnimalComparator animalComparator = new AnimalComparator();
     protected int worldAge = 0;
 
 
@@ -64,7 +65,7 @@ public class WorldMap {
         this.quantityPlantSpawnStart = quantityPlantSpawnStart;
         this.animalStartEnergy = animalStartEnergy;
         WorldInit();
-        findFreePositions();
+        findFreePositions(); //also adds all positions as 0 dead animal if maps uses ToxicBodies type
 
     }
 
@@ -114,6 +115,10 @@ public class WorldMap {
             for (int y = 0; y <= this.upperRight.y; y++) {
                 Vector2d nowVec = new Vector2d(x, y);
                 addToFreePositions(nowVec);
+
+                if (this.plantGrowType instanceof ToxicBodies) {
+                    this.deadAnimalCount.put(nowVec, 0);
+                }
             }
         }
     }
@@ -169,7 +174,7 @@ public class WorldMap {
     public Object objectAt(Vector2d position) { // wybrac najlepszego z listy przy pomocy comperatora
         if (animals.get(position) != null) {
             List<Animal> listFromHashMap = animals.get(position);
-            Collections.sort(listFromHashMap, new AnimalComparator());
+            Collections.sort(listFromHashMap, this.animalComparator);
 
             if (listFromHashMap.get(0).energy >= 0) { // prevent minus health in hell map
                 return listFromHashMap.get(0);
@@ -189,7 +194,7 @@ public class WorldMap {
     protected void killAnimals() {
         List<Animal> toErase = new ArrayList<>();
         for (Animal nowAnimal : this.animalsList) { //finding dead animals
-            if (nowAnimal.energy < 1) {
+            if (nowAnimal.energy < 1 || nowAnimal.isAlive == false) {
                 deadAnimalList.add(nowAnimal);
                 nowAnimal.kill(this.worldAge);
                 toErase.add(nowAnimal);
@@ -200,18 +205,21 @@ public class WorldMap {
             animalsList.remove(deadAnimal);
             removeAnimalHasMap(deadAnimal, deadAnimal.getPosition());
             addToFreePositions(deadAnimal.getPosition());
-            // adding to hashmap
-            int count = ((deadAnimalCount.get(deadAnimal.getPosition()) == null) ? 1 : 1 + deadAnimalCount.get(deadAnimal.getPosition()));
-            deadAnimalCount.put(deadAnimal.getPosition(), count);
+
+            if (this.plantGrowType instanceof ToxicBodies) {
+                // adding to hashmap with deadBodies on has
+                int count = 1 + deadAnimalCount.get(deadAnimal.getPosition());
+                deadAnimalCount.put(deadAnimal.getPosition(), count);
+            }
         }
 
-        //deadAnimalCount is used to count preferred positions on
+        //deadAnimalCount is used to count preferred positions on ToxicBodies growType
         if (this.plantGrowType instanceof ToxicBodies) {
-            //sorts hashmap by increasing values,
+            //sorts hashmap by increasing order,
             List<Map.Entry<Vector2d, Integer>> list = new ArrayList<>(deadAnimalCount.entrySet());
             Collections.sort(list, new Comparator<Map.Entry<Vector2d, Integer>>() {
                 public int compare(Map.Entry<Vector2d, Integer> o1, Map.Entry<Vector2d, Integer> o2) {
-                    return o2.getValue() - o1.getValue();
+                    return o1.getValue() - o2.getValue();
                 }
             });
             Map<Vector2d, Integer> temporaryDeadAnimals = new LinkedHashMap<>();
@@ -240,34 +248,39 @@ public class WorldMap {
 
 
     protected void eatPlants() {
-        List<Plant> toEarse = new ArrayList<>();
+        List<Plant> toErase = new ArrayList<>();
 
         for (Plant plant : plantsList) {
             if (animals.get(plant.getPosition()) != null) {
                 List<Animal> listFromHashMap = animals.get(plant.getPosition());
-                Collections.sort(listFromHashMap, new AnimalComparator());
+                Collections.sort(listFromHashMap, this.animalComparator);
                 listFromHashMap.get(0).feedAnimal(this.energyFromPlant);
-                toEarse.add(plant);
+                toErase.add(plant);
             }
 
         }
-        for (Plant eatenPlant : toEarse) {
+        for (Plant eatenPlant : toErase) {
             this.removePlant(eatenPlant);
         }
     }
 
 
-
     protected void growPlants() {
+        // plants required amount of plants every day,if there are free place
+        // if all preferred position are already taken and 80% condition is not fulfilled starts to place plants on not preferred positions
+
         if (plantGrowType instanceof ToxicBodies) {
+            //toxicBodies type need refresh always
             this.preferredPositions = pickPreferredPositions();
         }
+
         int quantityPreferred = (int) (Math.ceil((this.quantityGrowEveryDay * 80.0) / 100.0));
         int quantityNotPreferred = quantityGrowEveryDay - quantityPreferred;
-
         int alreadyGrown = 0;
-        List<Vector2d> tempPreferred = new ArrayList<>();
-        tempPreferred.addAll(this.preferredPositions);
+
+        List<Vector2d> tempPreferred = new ArrayList<>(this.preferredPositions);
+        // allPreferred positions even if taken by plant
+
         for (int i = 0; i < quantityPreferred; i++) {
             if (this.freePositions.size() == 0 || tempPreferred.size() == 0) {
                 break;
@@ -280,8 +293,9 @@ public class WorldMap {
             tempPreferred.remove(nowVector);
 
         }
-        List<Vector2d> tempNotPreferred = new ArrayList<>();
-        tempNotPreferred.addAll(this.freePositions);
+
+        List<Vector2d> tempNotPreferred = new ArrayList<>(this.freePositions);
+        // all Free Positions
 
         for (int i = alreadyGrown; i < quantityGrowEveryDay; i++) {
             if (this.freePositions.size() == 0 || tempNotPreferred.size() == 0 || alreadyGrown == quantityGrowEveryDay) {
@@ -313,7 +327,7 @@ public class WorldMap {
         for (Vector2d key : animals.keySet()) {
             if (animals.get(key) != null) {
                 List<Animal> listFromHashMap = animals.get(key);
-                Collections.sort(listFromHashMap, new AnimalComparator());
+                Collections.sort(listFromHashMap, this.animalComparator);
 
                 if (listFromHashMap.size() > 1) {
                     Animal strongerAnimal = listFromHashMap.get(0);
@@ -341,6 +355,7 @@ public class WorldMap {
         this.plantsList.remove(eatenPlant);
         addToFreePositions(eatenPlant.getPosition());
     }
+
     private void addAnimalHashMap(Animal animal, Vector2d newPosition) {
 
         if (animals.get(newPosition) == null) {
