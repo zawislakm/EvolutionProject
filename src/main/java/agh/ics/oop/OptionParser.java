@@ -31,15 +31,15 @@ public class OptionParser {
             fileScanner = new Scanner(this.fileToRead);
             String line = fileScanner.nextLine();
             String[] strParameters = line.split(";");
-            for (String prameter : strParameters) {
-                intParameters.add(Integer.parseInt(prameter));
+            for (String parameter : strParameters) {
+                intParameters.add(Integer.parseInt(parameter));
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e + "File not Found During parse from CSV");
         }
     }
 
-    public WorldMap createMap() throws Exception {
+    public WorldMap createMap(){
 
         if (intParameters.size() == 14) {
             IMapType mapType = ((intParameters.get(0) == 0) ? new EarthMap() : new HellMap());
@@ -61,7 +61,7 @@ public class OptionParser {
                     genomLenght, minimalEnergyToBreed, quantityGrowEveryDay, energyFromPlant, quantityAnimalSpawnStart, quantityPlantSpawnStart, animalStartEnergy);
             return worldMap;
         } else {
-            throw new Exception("Incorrect amount of starting values");
+            throw new RuntimeException(" Incorrect amount of starting values");
         }
 
     }

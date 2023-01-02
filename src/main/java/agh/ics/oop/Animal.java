@@ -13,7 +13,6 @@ public class Animal extends WorldMapElement {
     protected int energy;
     protected List<Integer> genom;
     protected int whichGenNow;
-
     //stats
     protected int age = 0;
     protected int child = 0;
@@ -25,6 +24,8 @@ public class Animal extends WorldMapElement {
     public boolean withMostCommon = false;
     public boolean beingTraced = false;
     private AnimalEnergyVisualisation animalStatus = AnimalEnergyVisualisation.HEALTHY;
+    //help
+    private final List<IAnimalChangePosition> observersList = new ArrayList<>();
 
     public Animal(WorldMap worldMap, Vector2d position, int energy, List<Integer> genom) {
         this.worldMap = worldMap;
@@ -32,7 +33,7 @@ public class Animal extends WorldMapElement {
         this.energy = energy;
         this.genom = genom;
         this.whichGenNow = (int) (Math.random() * genom.size());
-        this.orientation.random((int) (Math.random() * 8));
+        this.orientation = this.orientation.random((int) (Math.random() * 8));
     }
 
     public String toString() {
@@ -66,7 +67,7 @@ public class Animal extends WorldMapElement {
 
 
     protected void move() {
-
+        Vector2d oldPosition = this.position;
         this.age += 1;
         this.orientation = this.orientation.orientationRotationFromInt(genom.get(whichGenNow)); // change orientation
         this.whichGenNow = this.worldMap.nextGen(whichGenNow); //pick which gen will be used next
@@ -74,18 +75,20 @@ public class Animal extends WorldMapElement {
         Vector2d newPosition = this.position.add(moveVector);
         newPosition = this.worldMap.mapSpecification(this, newPosition); //EarthMap or HellMap IMapType
         this.position = newPosition;
+        notifyObservers(this, oldPosition, newPosition);
     }
 
-    public void lowerEnergy(int moveCost){
+    public void lowerEnergy(int moveCost) {
         this.energy -= moveCost;
-        if (this.energy < 0){
+        if (this.energy < 0) {
             this.isAlive = false;
         }
     }
 
-    public void animalRotate180(){
+    public void animalRotate180() {
         this.orientation = this.orientation.orientationRotationFromInt(4);
     }
+
     protected void feedAnimal(int powerUp) {
         if (this.energy >= 0) {
             this.eatenPlants += 1;
@@ -146,6 +149,20 @@ public class Animal extends WorldMapElement {
     protected void kill(int worldAge) {
         this.isAlive = false;
         this.deathDay = worldAge;
+    }
+
+
+    public void addObserver(IAnimalChangePosition observer) {
+        this.observersList.add(observer);
+    }
+
+    public void removeObserver(IAnimalChangePosition observer) {
+        this.observersList.remove(observer);
+    }
+
+    private void notifyObservers(Animal animal, Vector2d oldPosition, Vector2d newPosition) {
+        for (IAnimalChangePosition observer : this.observersList)
+            observer.positionChanged(animal, oldPosition, newPosition);
     }
 
 }

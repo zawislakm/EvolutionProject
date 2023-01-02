@@ -9,7 +9,7 @@ import java.util.List;
 /*
     save statistic to CSV if required, notified about next day by IPositionChangeObserver
  */
-public class StatisticsCSVSave implements IPositionChangeObserver { //lapanie konca
+public class StatisticsCSVSave implements IPositionChangeObserver {
 
     private final WorldMapStatistics worldMapStatistics;
     private final Simulation engineSimulation;
@@ -36,6 +36,7 @@ public class StatisticsCSVSave implements IPositionChangeObserver { //lapanie ko
 
             } else {
                 List<String> stats = new ArrayList<>();
+                worldMapStatistics.update();
                 stats.add(Integer.toString(worldMapStatistics.getWorldAge()));
                 stats.add(Integer.toString(worldMapStatistics.getAmountOfAnimals()));
                 stats.add(Integer.toString(worldMapStatistics.getAmountOfPlants()));

@@ -3,7 +3,6 @@ package agh.ics.oop;
 import java.util.Objects;
 
 public class Vector2d {
-    // napisac equalsa oraz napisac test do equalans i po co bylo move direction
     public final int x;
     public final int y;
 
@@ -40,7 +39,7 @@ public class Vector2d {
         return new Vector2d(x - other.x, y - other.y);
     }
 
-    public boolean equals(Object other) //???
+    public boolean equals(Object other)
     {
         if (this == other) {
             return true;

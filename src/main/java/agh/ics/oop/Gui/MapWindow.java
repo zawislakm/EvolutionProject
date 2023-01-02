@@ -54,12 +54,7 @@ public class MapWindow implements IPositionChangeObserver {
         newWindowStage.setScene(mapWindowScene);
         newWindowStage.setTitle("Map number " + this.mapNumber);
 
-        newWindowStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                engine.setFinishedStatus();
-            }
-        });
+        newWindowStage.setOnCloseRequest(event -> engine.setFinishedStatus());
         newWindowStage.show();
     }
 

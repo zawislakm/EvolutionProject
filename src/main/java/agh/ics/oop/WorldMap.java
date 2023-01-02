@@ -8,10 +8,8 @@ import agh.ics.oop.PlantGrowType.ToxicBodies;
 
 import java.util.*;
 
-/*
 
- */
-public class WorldMap {
+public class WorldMap implements IAnimalChangePosition {
 
     private final IMapType mapType;
     private final INextGenType nextGenType;
@@ -38,7 +36,6 @@ public class WorldMap {
     protected List<Vector2d> preferredPositions;
     protected final List<Plant> plantsList = new ArrayList<>();
     private final Map<Vector2d, Plant> plants = new HashMap<>();
-    private final MapVisualizer mapVisualizer = new MapVisualizer(this);
 
     protected List<Vector2d> freePositions = new ArrayList<>(); //stores all free positions
 
@@ -68,11 +65,6 @@ public class WorldMap {
         findFreePositions(); //also adds all positions as 0 dead animal if maps uses ToxicBodies type
 
     }
-
-    public String toString() {
-        return mapVisualizer.draw(this.lowerLeft, this.upperRight);
-    }
-
 
     //initialization of world map
     private void WorldInit() {
@@ -160,6 +152,7 @@ public class WorldMap {
     //methods for operations and checks on map
     private boolean placeAnimal(Animal animal) {
         if (isInBorder(animal.getPosition())) {
+            animal.addObserver(this);
             animalsList.add(animal);
             addAnimalHashMap(animal, animal.getPosition());
             return true;
@@ -194,7 +187,7 @@ public class WorldMap {
     protected void killAnimals() {
         List<Animal> toErase = new ArrayList<>();
         for (Animal nowAnimal : this.animalsList) { //finding dead animals
-            if (nowAnimal.energy < 1 || nowAnimal.isAlive == false) {
+            if (nowAnimal.energy < 1 || !nowAnimal.isAlive) {
                 deadAnimalList.add(nowAnimal);
                 nowAnimal.kill(this.worldAge);
                 toErase.add(nowAnimal);
@@ -231,18 +224,8 @@ public class WorldMap {
     }
 
     protected void moveAnimals() {
-
         for (Animal nowAnimal : this.animalsList) {
-
-            Vector2d oldPosition = nowAnimal.getPosition();
             nowAnimal.move();
-            Vector2d newPosition = nowAnimal.getPosition();
-
-            //notyfing hashmap of animals
-            removeAnimalHasMap(nowAnimal, oldPosition);
-            addAnimalHashMap(nowAnimal, newPosition);
-            addToFreePositions(oldPosition);
-            removeFromFreePositions(newPosition);
         }
     }
 
@@ -266,8 +249,10 @@ public class WorldMap {
 
 
     protected void growPlants() {
-        // plants required amount of plants every day,if there are free place
+        // assume that growing all plants is more important than 80/20 distribution
+        // places required amount of plants every day,if there are free place
         // if all preferred position are already taken and 80% condition is not fulfilled starts to place plants on not preferred positions
+        // till all required for this day plants are planted or there is no free places
 
         if (plantGrowType instanceof ToxicBodies) {
             //toxicBodies type need refresh always
@@ -281,7 +266,8 @@ public class WorldMap {
         List<Vector2d> tempPreferred = new ArrayList<>(this.preferredPositions);
         // allPreferred positions even if taken by plant
 
-        for (int i = 0; i < quantityPreferred; i++) {
+
+        while (alreadyGrown < quantityPreferred) {
             if (this.freePositions.size() == 0 || tempPreferred.size() == 0) {
                 break;
             }
@@ -291,14 +277,13 @@ public class WorldMap {
                 alreadyGrown += 1;
             }
             tempPreferred.remove(nowVector);
-
         }
 
         List<Vector2d> tempNotPreferred = new ArrayList<>(this.freePositions);
         // all Free Positions
 
-        for (int i = alreadyGrown; i < quantityGrowEveryDay; i++) {
-            if (this.freePositions.size() == 0 || tempNotPreferred.size() == 0 || alreadyGrown == quantityGrowEveryDay) {
+        while (alreadyGrown < quantityGrowEveryDay) {
+            if (this.freePositions.size() == 0 || tempNotPreferred.size() == 0) {
                 break;
             }
             int randomIndex = (int) (Math.random() * tempNotPreferred.size());
@@ -307,6 +292,7 @@ public class WorldMap {
                 alreadyGrown += 1;
             }
             tempNotPreferred.remove(nowVector);
+
         }
     }
 
@@ -332,7 +318,7 @@ public class WorldMap {
                 if (listFromHashMap.size() > 1) {
                     Animal strongerAnimal = listFromHashMap.get(0);
                     Animal weakerAnimal = listFromHashMap.get(1);
-                    if (weakerAnimal.energy > this.minimalEnergyToBreed) {
+                    if (weakerAnimal.energy >= this.minimalEnergyToBreed) {
                         Animal newBorn = strongerAnimal.breedAnimal(weakerAnimal, breedCost);
                         this.placeAnimal(newBorn);
                     }
@@ -379,4 +365,14 @@ public class WorldMap {
         }
 
     }
+
+
+    public void positionChanged(Animal animal,Vector2d oldPosition, Vector2d newPosition) {
+        removeAnimalHasMap(animal, oldPosition);
+        addAnimalHashMap(animal, newPosition);
+        addToFreePositions(oldPosition);
+        removeFromFreePositions(newPosition);
+    }
+
+
 }

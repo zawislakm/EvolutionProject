@@ -12,18 +12,6 @@ public class StatisticsGui {
     protected VBox statsVBox = new VBox();
     private AnimalStatistics animalStat = null;
 
-
-
-//    private LineChart animalsAmountChart;
-//
-//    private XYChart.Series animalsData = new XYChart.Series();
-//    private LineChart<Number, Number> plantAmountChart;
-//    private LineChart freePositionsAmountChart;
-//    private LineChart averageEnergy;
-//    private LineChart averageLifeLength;
-
-
-
     public StatisticsGui(WorldMapStatistics worldMapStatistics, Simulation engine) {
         this.worldMapStatistics = worldMapStatistics;
         this.engineSimulation = engine;
@@ -37,20 +25,7 @@ public class StatisticsGui {
     protected void removeAnimalTracker(){
         this.animalStat = null;
     }
-//    private void init() {
-//        this.statsVBox.add(getStatistics(), 1, 1, 1, 1);
-//        NumberAxis xAxisAnimals = new NumberAxis();
-//        xAxisAnimals.setLabel("Days");
-//        NumberAxis yAxisAnimals = new NumberAxis();
-//        yAxisAnimals.setLabel("Animal Amount");
-//        this.animalsAmountChart = new LineChart(xAxisAnimals, yAxisAnimals);
-//
-//
-//        this.animalsData.getData().add(new XYChart.Data<>(this.worldMapStatistics.getWorldAge(), this.worldMapStatistics.getAmountOfAnimals()));
-//        this.animalsAmountChart.getData().add(this.animalsData);
-//
-//        statsVBox.getChildren().add(getStatistics());
-//    }
+
 
     private VBox getStatistics() {
         VBox boxWithStats = new VBox();

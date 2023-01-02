@@ -26,7 +26,7 @@ public class AnimalStatistics {
     }
 
     public void update(){
-        this.genom = animal.genom;
+        this.genom = this.animal.genom;
         this.whichGenActive = this.animal.whichGenNow;
         this.energy = this.animal.energy;
         this.eatenPlants = this.animal.eatenPlants;

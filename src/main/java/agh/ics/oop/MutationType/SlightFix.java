@@ -35,8 +35,7 @@ public class SlightFix implements IMutationType {
         int pickRandom = (int) (Math.random() * 2);
         return switch (pickRandom) {
             case 0 -> v1;
-            case 1 -> v2;
-            default -> v1; //never will happen
+            default -> v2;
         };
 
     }

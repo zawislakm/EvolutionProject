@@ -17,14 +17,11 @@ public class App extends Application {
         primayStage.setTitle("Main Menu");
 
 
-        primayStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                Platform.exit();
-                System.exit(0);
-            }
-            //close program when main menu x clicked
-            //kills all thread
+        //close program when main menu x clicked
+        //kills all thread
+        primayStage.setOnCloseRequest(event -> {
+            Platform.exit();
+            System.exit(0);
         });
 
         primayStage.show();

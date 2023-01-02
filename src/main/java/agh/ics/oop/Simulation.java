@@ -16,7 +16,7 @@ public class Simulation implements Runnable {
     }
 
     public void run() {
-
+        moveGui(1000);
         while (!(this.isFinished)) {
             checkIfPause();
 
@@ -80,7 +80,6 @@ public class Simulation implements Runnable {
         notifyObservers();
 
         try {
-            //int moveDelay = 1000;
             Thread.sleep(moveDelay);
         } catch (InterruptedException ex) {
             System.out.println(ex.getMessage() + " Simulation Interrupted during sleep");

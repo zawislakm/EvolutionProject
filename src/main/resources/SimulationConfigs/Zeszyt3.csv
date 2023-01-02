@@ -1,1 +1,2 @@
-1;1;1;0;10;7;40;7;70;2;20;8;3;30
+1;1;1;1;10;7;40;7;70;2;20;8;3;30
+mapType;nextGenType;mutationType ;plantGrowType;width;height;breedCost;genomLength;minimalEnergyToBreed;quantityGrowEveryDay;energyFromPlant;animalSpawn;plantSpawn;startEnergy
