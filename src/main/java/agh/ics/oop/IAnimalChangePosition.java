@@ -1,6 +1,6 @@
 package agh.ics.oop;
 
-public interface IAnimalChangePosition {
+public interface IAnimalChangePosition { // nazwa bardziej na metodę niż interfejs
 
-    void positionChanged(Animal animal,Vector2d oldPosition, Vector2d newPosition);
+    void positionChanged(Animal animal, Vector2d oldPosition, Vector2d newPosition);
 }

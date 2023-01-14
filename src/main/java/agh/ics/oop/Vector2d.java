@@ -39,8 +39,7 @@ public class Vector2d {
         return new Vector2d(x - other.x, y - other.y);
     }
 
-    public boolean equals(Object other)
-    {
+    public boolean equals(Object other) {
         if (this == other) {
             return true;
         }
@@ -59,7 +58,6 @@ public class Vector2d {
     public Vector2d opposite() {
         return new Vector2d(x * -1, y * -1);
     }
-
 
 
 }

@@ -3,15 +3,15 @@ package agh.ics.oop;
 
 public class Plant extends WorldMapElement {
 
-    public Plant(Vector2d position){
+    public Plant(Vector2d position) {
         this.position = position;
     }
 
-    public String toString(){
+    public String toString() {
         return "* ";
     }
 
-    public String getImageName(){
+    public String getImageName() {
         return "src/main/resources/Images/PLANT.png";
     }
 }

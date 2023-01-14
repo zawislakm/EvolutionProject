@@ -99,7 +99,7 @@ public class MapWindow implements IPositionChangeObserver {
 
     private HBox createButtons() {
         HBox buttonHBox = new HBox();
-        if (engine.getFinishedStatus()){
+        if (engine.getFinishedStatus()) {
             return buttonHBox;
         }
 
@@ -154,7 +154,6 @@ public class MapWindow implements IPositionChangeObserver {
 
         return mapGridPane;
     }
-
 
 
     private void update() {

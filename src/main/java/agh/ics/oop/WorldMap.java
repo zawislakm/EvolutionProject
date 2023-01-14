@@ -367,7 +367,7 @@ public class WorldMap implements IAnimalChangePosition {
     }
 
 
-    public void positionChanged(Animal animal,Vector2d oldPosition, Vector2d newPosition) {
+    public void positionChanged(Animal animal, Vector2d oldPosition, Vector2d newPosition) {
         removeAnimalHasMap(animal, oldPosition);
         addAnimalHashMap(animal, newPosition);
         addToFreePositions(oldPosition);

@@ -17,7 +17,7 @@ public class GuiElementBox {
 
     private final WorldMapElement worldMapElement;
 
-    public GuiElementBox(WorldMapElement worldMapElement){
+    public GuiElementBox(WorldMapElement worldMapElement) {
         this.worldMapElement = worldMapElement;
     }
 
@@ -40,7 +40,7 @@ public class GuiElementBox {
         return vBox;
     }
 
-    public Image getImage(String imageName){
+    public Image getImage(String imageName) {
         Image image = null;
         if (alreadyLoadedElements.get(imageName) == null) {
             try {

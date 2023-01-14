@@ -6,7 +6,7 @@ import agh.ics.oop.Vector2d;
 import agh.ics.oop.WorldMap;
 
 public class HellMap implements IMapType {
-    public Vector2d mapSpecyfication(Animal animal, Vector2d lowerLeft,Vector2d upperRight, Vector2d newPosition,int breedCost) {
+    public Vector2d mapSpecyfication(Animal animal, Vector2d lowerLeft, Vector2d upperRight, Vector2d newPosition, int breedCost) {
 
 
         int rangeY = upperRight.y;
@@ -17,6 +17,6 @@ public class HellMap implements IMapType {
         animal.lowerEnergy(breedCost);
 
 
-        return new Vector2d(randomX,randomY);
+        return new Vector2d(randomX, randomY);
     }
 }

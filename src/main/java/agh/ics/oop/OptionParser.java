@@ -4,18 +4,20 @@ import agh.ics.oop.MapType.*;
 import agh.ics.oop.MutationType.*;
 import agh.ics.oop.NextGenType.*;
 import agh.ics.oop.PlantGrowType.*;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
 /*
  parse CSV config to simulation options
  */
 public class OptionParser {
 
-    private final  List<Integer> intParameters = new ArrayList<>();
-    protected File fileToRead;
+    private final List<Integer> intParameters = new ArrayList<>();
+    protected File fileToRead; // protected?
     private String filePath;
 
     public OptionParser(String fileToRead) {
@@ -39,7 +41,7 @@ public class OptionParser {
         }
     }
 
-    public WorldMap createMap(){
+    public WorldMap createMap() {
 
         if (intParameters.size() == 14) {
             IMapType mapType = ((intParameters.get(0) == 0) ? new EarthMap() : new HellMap());

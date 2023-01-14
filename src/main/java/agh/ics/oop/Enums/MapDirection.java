@@ -17,7 +17,7 @@ public enum MapDirection {
     private final String directionName;
     private final Vector2d defaultVec;
 
-    MapDirection(String kierunek, Vector2d vec) {
+    MapDirection(String kierunek, Vector2d vec) { // polglish
         this.directionName = kierunek;
         this.defaultVec = vec;
     }
@@ -30,19 +30,19 @@ public enum MapDirection {
         return this.defaultVec;
     }
 
-    public MapDirection orientationRotationFromInt(int rotateAngle){
+    public MapDirection orientationRotationFromInt(int rotateAngle) {
 
         MapDirection returnValue = this;
-        for(int i = 0; i < rotateAngle;i++){
+        for (int i = 0; i < rotateAngle; i++) {
             returnValue = returnValue.next();
         }
 
         return returnValue;
     }
 
-    public MapDirection random(int random){
+    public MapDirection random(int random) {
 
-        return switch (random){
+        return switch (random) { // .values()
             case 0 -> NORTHEAST;
             case 1 -> EAST;
             case 2 -> SOUTHEAST;
@@ -54,9 +54,9 @@ public enum MapDirection {
         };
     }
 
-    private MapDirection next(){
+    private MapDirection next() {
 
-        return switch (this){
+        return switch (this) {
             case NORTH -> NORTHEAST;
             case NORTHEAST -> EAST;
             case EAST -> SOUTHEAST;

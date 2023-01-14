@@ -46,7 +46,7 @@ public class appMenu {
         return checkBox;
     }
 
-    private void createMenu(){
+    private void createMenu() {
         Button startButton = new Button();
         startButton.setText("Start Button");
         ComboBox comboBox = createComboBox();
@@ -58,7 +58,7 @@ public class appMenu {
             WorldMap simulationMap = null;
             try {
                 simulationMap = parser.createMap();
-            } catch (Exception ex) {
+            } catch (Exception ex) { // nie wolno łapać Exception
                 throw new RuntimeException(ex + "something wrong with csv config");
             }
             Simulation engine = new Simulation(simulationMap);
@@ -77,7 +77,6 @@ public class appMenu {
         this.menuVBox.setAlignment(Pos.BASELINE_CENTER);
 
     }
-
 
 
 }

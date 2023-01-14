@@ -38,7 +38,7 @@ public class Simulation implements Runnable {
     }
 
     private void checkIfPause() {
-        if (this.isPaused) {
+        if (this.isPaused) { // while
             findAnimalGenoms();
             synchronized (this) {
                 try {
@@ -82,7 +82,7 @@ public class Simulation implements Runnable {
         try {
             Thread.sleep(moveDelay);
         } catch (InterruptedException ex) {
-            System.out.println(ex.getMessage() + " Simulation Interrupted during sleep");
+            System.out.println(ex.getMessage() + " Simulation Interrupted during sleep"); // to nie jest najlepsza obsługa wyjątku
         }
     }
 

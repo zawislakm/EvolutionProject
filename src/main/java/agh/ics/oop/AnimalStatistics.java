@@ -20,47 +20,50 @@ public class AnimalStatistics {
     private boolean isAlive;
 
 
-    public AnimalStatistics(Animal animal){
+    public AnimalStatistics(Animal animal) {
         this.animal = animal;
         update();
     }
 
-    public void update(){
+    public void update() {
         this.genom = this.animal.genom;
         this.whichGenActive = this.animal.whichGenNow;
         this.energy = this.animal.energy;
         this.eatenPlants = this.animal.eatenPlants;
         this.child = this.animal.child;
         this.isAlive = this.animal.isAlive;
-        if (this.isAlive){
+        if (this.isAlive) {
             this.ageOrDeathDay = this.animal.age;
-        }else {
+        } else {
             this.ageOrDeathDay = this.animal.deathDay;
         }
     }
 
-    public List<Integer> getGenom(){
+    public List<Integer> getGenom() {
         return this.genom;
     }
 
-    public int getWhichGenActive(){
+    public int getWhichGenActive() {
         return this.whichGenActive;
     }
-    public int getEnergy(){
+
+    public int getEnergy() {
         return this.energy;
     }
-    public int getEatenPlants(){
+
+    public int getEatenPlants() {
         return this.eatenPlants;
     }
-    public int getChild(){
+
+    public int getChild() {
         return this.child;
     }
 
-    public boolean isAlive(){
+    public boolean isAlive() {
         return this.isAlive;
     }
 
-    public int getAgeOrDeathDay(){
+    public int getAgeOrDeathDay() {
         return this.ageOrDeathDay;
     }
 

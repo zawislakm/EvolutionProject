@@ -1,4 +1,4 @@
-package agh.ics.oop.Enums;
+package agh.ics.oop.Enums; // bycie/nie-bycie enumem to nie jest kryterium do podziału na pakiety
 
 public enum AnimalEnergyVisualisation {
     STRONGEST("src/main/resources/Images/80-100.png"),
@@ -20,6 +20,7 @@ public enum AnimalEnergyVisualisation {
     public String getImagePath() {
         return this.imagePath;
     }
+
     //maxEnergy is energy of the strongest animal => there is always one dark green animal on map
     //other animals get color which depends on health percentage
     public AnimalEnergyVisualisation getStatus(int maxEnergy, int animalEnergy) {

@@ -19,30 +19,39 @@ public class WorldMapStatistics {
     public WorldMapStatistics(WorldMap worldMap) {
         this.worldMap = worldMap;
     }
+
     public int getAmountOfAnimals() {
         return this.amountOfAnimals;
     }
+
     public int getAmountOfPlants() {
         return this.amountOfPlants;
     }
+
     public int getAmountOfFreePositions() {
         return this.amountOfFreePositions;
     }
+
     public List<Integer> getMostCommonGenom() {
         return this.mostCommonGenom;
     }
+
     public double getAverageEnergy() {
         return this.averageEnergy;
     }
+
     public double getAverageLifeLength() {
         return this.averageLifeLength;
     }
+
     public int getWorldAge() {
         return worldMap.worldAge;
     }
+
     public int getMaxEnergy() {
         return this.maxEnergy;
     }
+
     public void update() {
         updateAnimalsAmount();
         updatePlantsAmount();
@@ -52,21 +61,26 @@ public class WorldMapStatistics {
         updateAverageLifeLength();
         updateMostCommonGenom();
     }
+
     private void updateAnimalsAmount() {
         this.amountOfAnimals = worldMap.animalsList.size();
     }
+
     private void updatePlantsAmount() {
         this.amountOfPlants = worldMap.plantsList.size();
     }
+
     private void updateFreePositionsAmount() {
         this.amountOfFreePositions = worldMap.freePositions.size();
     }
+
     private void updateMaxEnergy() {
         this.maxEnergy = 0;
         for (Animal animal : worldMap.animalsList) {
             this.maxEnergy = Math.max(this.maxEnergy, animal.energy);
         }
     }
+
     private void updateAverageEnergy() {
         double newAverageEnergy = 0;
         for (Animal animal : worldMap.animalsList) {
@@ -75,6 +89,7 @@ public class WorldMapStatistics {
         newAverageEnergy = newAverageEnergy / worldMap.animalsList.size();
         this.averageEnergy = Math.round(newAverageEnergy);
     }
+
     private void updateAverageLifeLength() {
         if (worldMap.deadAnimalList.size() == 0) {
             this.averageLifeLength = 0;
@@ -87,6 +102,7 @@ public class WorldMapStatistics {
             this.averageLifeLength = Math.round(newAverageLifeLength);
         }
     }
+
     private void updateMostCommonGenom() { //not done
 
         if (worldMap.animalsList.size() == 0) {

@@ -9,9 +9,9 @@ import java.util.List;
 public class Animal extends WorldMapElement {
 
     private final WorldMap worldMap;
-    protected MapDirection orientation = MapDirection.NORTH;
+    protected MapDirection orientation = MapDirection.NORTH; // czemu to wszystko jest protected, skoro nic z Animal nie dziedziczy?
     protected int energy;
-    protected List<Integer> genom;
+    protected List<Integer> genom; // przydałaby się osobna klasa na genom
     protected int whichGenNow;
     //stats
     protected int age = 0;
@@ -21,8 +21,8 @@ public class Animal extends WorldMapElement {
     protected boolean isAlive = true;
 
     //type of image
-    public boolean withMostCommon = false;
-    public boolean beingTraced = false;
+    public boolean withMostCommon = false; // czy zwierzę powinno to wiedzieć?
+    public boolean beingTraced = false; // jw.
     private AnimalEnergyVisualisation animalStatus = AnimalEnergyVisualisation.HEALTHY;
     //help
     private final List<IAnimalChangePosition> observersList = new ArrayList<>();

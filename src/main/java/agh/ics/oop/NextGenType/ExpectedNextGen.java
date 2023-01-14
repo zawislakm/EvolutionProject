@@ -5,7 +5,7 @@ import agh.ics.oop.WorldMap;
 
 public class ExpectedNextGen implements INextGenType {
 
-    public int nextGen(WorldMap worldMap, int whichGenNow){
-        return ((whichGenNow+1) % worldMap.genomLength);
+    public int nextGen(WorldMap worldMap, int whichGenNow) {
+        return ((whichGenNow + 1) % worldMap.genomLength);
     }
 }

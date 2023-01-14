@@ -17,7 +17,7 @@ public class ToxicBodies implements IPlantGrowType {
         int iterTo = (int) (Math.ceil((preferredPositions.size() * 20.0) / 100.0));
 
         //picks 20% of places as preferred
-        for (Vector2d key : worldMap.sortedDeadAnimalCountDesc.keySet()) {
+        for (Vector2d key : worldMap.sortedDeadAnimalCountDesc.keySet()) { // czy ToxicBodies nie powinno zarządzać tą listą, a nie brać ją z mapy?
             preferredPositions.add(key);
             iterator++;
             if (iterator > iterTo) {
