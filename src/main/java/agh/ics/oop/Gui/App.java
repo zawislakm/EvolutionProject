@@ -9,10 +9,10 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 public class App extends Application {
-
+//to jest glówna classa funckji
 
     public void start(Stage primayStage) {
-        Scene scene = new Scene(new appMenu().menuVBox, 300, 250);
+        Scene scene = new Scene(new appMenu().menuVBox, 300, 250); // tutaj jest obiegk appMenu
         primayStage.setScene(scene);
         primayStage.setTitle("Main Menu");
 

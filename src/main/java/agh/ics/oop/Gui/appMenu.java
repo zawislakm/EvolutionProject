@@ -13,12 +13,14 @@ import java.io.File;
 
 public class appMenu {
 
-
-    protected final VBox menuVBox = new VBox();
+//i tu sie robia rzeczy do app menu
+    //no miej wiecej tylko potem jakos bedziesz musial sie do tego odwolywac,
+// to pewnie nawet w tej classie co zrobisz bedziesz mogl to zrobic wiec luz
+    protected final VBox menuVBox = new VBox(); //ten obiek jest tylko pobierany do app
     private int mapNumber = 0;
 
     public appMenu() {
-        createMenu();
+        createMenu();///to jest konstruktor ktory odrazu odpala metode
     }
 
     private ComboBox createComboBox() {
@@ -46,7 +48,7 @@ public class appMenu {
         return checkBox;
     }
 
-    private void createMenu(){
+    private void createMenu(){//o ta metode i z tej klasy do secny pobiernay jest ten..
         Button startButton = new Button();
         startButton.setText("Start Button");
         ComboBox comboBox = createComboBox();
